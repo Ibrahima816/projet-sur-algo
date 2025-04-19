@@ -1,0 +1,104 @@
+# Problème 1 : Somme des éléments distincts entre deux ensembles
+
+def somme_elements_distincts(ensemble1, ensemble2):
+    """
+    Calcule la somme des éléments présents dans un seul des deux ensembles
+    Utilisation de tableaux (listes en Python)
+    """
+    somme = 0
+    
+    # Vérifier les éléments de l'ensemble1 qui ne sont pas dans l'ensemble2
+    for element in ensemble1:
+        if element not in ensemble2:
+            somme += element
+    
+    # Vérifier les éléments de l'ensemble2 qui ne sont pas dans l'ensemble1
+    for element in ensemble2:
+        if element not in ensemble1:
+            somme += element
+    
+    return somme
+
+# Exemple d'utilisation pour le problème 1
+ensemble1 = [3, 1, 7, 9]
+ensemble2 = [2, 4, 1, 9, 3]
+resultat = somme_elements_distincts(ensemble1, ensemble2)
+print(f"Problème 1 - Résultat: {resultat}")  # Doit afficher 13
+
+# Problème 2 : Produit scalaire et vérification d'orthogonalité
+
+# Version avec procédure (modifie une variable passée par référence)
+def dot_product_procedure(v1, v2, ps):
+    """
+    Procédure qui calcule le produit scalaire et stocke le résultat dans ps
+    ps est passé par référence (en Python, on utilise une liste pour simuler cela)
+    """
+    if len(v1) != len(v2):
+        ps[0] = None  # Cas d'erreur si les vecteurs n'ont pas la même dimension
+        return
+    
+    result = 0
+    for i in range(len(v1)):
+        result += v1[i] * v2[i]
+    
+    ps[0] = result
+
+# Version avec fonction (retourne directement le résultat)
+def dot_product_function(v1, v2):
+    """
+    Fonction qui retourne le produit scalaire de v1 et v2
+    """
+    if len(v1) != len(v2):
+        return None  # Cas d'erreur
+    
+    result = 0
+    for i in range(len(v1)):
+        result += v1[i] * v2[i]
+    
+    return result
+
+def verifier_orthogonalite(n, paires_vecteurs, use_procedure=True):
+    """
+    Vérifie pour n paires de vecteurs s'ils sont orthogonaux
+    Peut utiliser soit la procédure soit la fonction pour le produit scalaire
+    """
+    resultats = []
+    
+    for i in range(n):
+        v1, v2 = paires_vecteurs[i]
+        
+        if use_procedure:
+            # Utilisation de la procédure avec passage par référence
+            ps = [0]  # Variable qui sera modifiée par la procédure
+            dot_product_procedure(v1, v2, ps)
+            produit_scalaire = ps[0]
+        else:
+            # Utilisation de la fonction
+            produit_scalaire = dot_product_function(v1, v2)
+        
+        if produit_scalaire is None:
+            resultats.append(f"Paire {i+1}: Dimensions incompatibles")
+        elif produit_scalaire == 0:
+            resultats.append(f"Paire {i+1}: Orthogonaux (produit scalaire = 0)")
+        else:
+            resultats.append(f"Paire {i+1}: Non orthogonaux (produit scalaire = {produit_scalaire})")
+    
+    return resultats
+
+# Exemple d'utilisation pour le problème 2
+paires_vecteurs = [
+    ([1, 0], [0, 1]),           # Orthogonaux
+    ([1, 2, 3], [4, 5, 6]),     # Non orthogonaux
+    ([2, -1], [1, 2]),          # Orthogonaux
+    ([1, 2], [3])               # Dimensions incompatibles
+]
+
+print("\nProblème 2 - Avec procédure:")
+resultats_procedure = verifier_orthogonalite(len(paires_vecteurs), paires_vecteurs, use_procedure=True)
+for res in resultats_procedure:
+    print(res)
+
+print("\nProblème 2 - Avec fonction:")
+resultats_fonction = verifier_orthogonalite(len(paires_vecteurs), paires_vecteurs, use_procedure=False)
+for res in resultats_fonction:
+    print(res)
